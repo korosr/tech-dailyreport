@@ -48,5 +48,4 @@ public class EmployeesDestroyServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/employees/index");
         }
 	}
-
 }

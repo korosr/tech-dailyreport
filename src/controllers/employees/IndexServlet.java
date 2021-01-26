@@ -17,7 +17,7 @@ import util.DBUtil;
 /**
  * Servlet implementation class IndexServlet
  */
-@WebServlet(name = "index", urlPatterns = { "/employees/index" })
+@WebServlet(name = "employees/index", urlPatterns = { "/employees/index" })
 public class IndexServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
