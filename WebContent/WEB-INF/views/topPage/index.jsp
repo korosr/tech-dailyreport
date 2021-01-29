@@ -8,6 +8,12 @@
                 <c:out value="${flush}"></c:out>
             </div>
         </c:if>
+        <!-- 出退勤ボタン
+        <div id="in_out_btn">
+        	<a href="<c:url value='/reports/commuting' />" class="btn btn--yellow btn--cubic">出勤</a>
+        	<a href="<c:url value='/reports/leave_work' />" class="btn btn--yellow btn--cubic">退勤</a>
+        </div>
+        -->
         <h2>日報管理システムへようこそ</h2>
         <h3>【自分の日報　一覧】</h3>
         <table id="report_list">
@@ -28,6 +34,7 @@
                 </c:forEach>
             </tbody>
         </table>
+
 
         <div id="pagination">
             （全 ${reports_count} 件）<br />

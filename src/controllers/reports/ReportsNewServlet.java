@@ -40,5 +40,4 @@ public class ReportsNewServlet extends HttpServlet {
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/new.jsp");
         rd.forward(request, response);
 	}
-
 }

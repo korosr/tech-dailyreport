@@ -42,7 +42,7 @@ public class Report {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@ManyToOne
+	@ManyToOne//多対1
 	@JoinColumn(name = "employee_id", nullable = false)
 	private Employee employee;
 
