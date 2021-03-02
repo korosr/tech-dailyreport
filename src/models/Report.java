@@ -19,7 +19,7 @@ import javax.persistence.Table;
 @NamedQueries({
 	@NamedQuery(
 			name = "getAllReports",
-			query = "SELECT r FROM Report AS r ORDER BY r.id DESC"
+			query = "SELECT r FROM Report AS r WHERE ORDER BY r.id DESC"
 			),
 	@NamedQuery(
 			name = "getReportsCount",

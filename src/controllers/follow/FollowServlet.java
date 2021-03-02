@@ -9,12 +9,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import models.Employee;
+import models.Relationship;
 import util.DBUtil;
 
 /**
  * Servlet implementation class FollowServlet
  */
-@WebServlet(name = "follow", urlPatterns = { "/follow" })
+@WebServlet(name = "employees/follow", urlPatterns = { "/employees/follow" })
 public class FollowServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -30,11 +32,27 @@ public class FollowServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 		EntityManager em = DBUtil.createEntityManager();
 
-        String followedId = request.getParameter("id");
+		//フォローしたい人のID
+        int followedId = Integer.parseInt(request.getParameter("id"));
+		Employee e = (Employee) request.getSession().getAttribute("login_employee");
+		//ログインユーザのID
+		int loginUserId = e.getId();
 
+        Relationship r = new Relationship();
+        r.setFollowed_id(followedId);
+        r.setFollower_id(loginUserId);
 
+        em.getTransaction().begin();
+        em.persist(r);
+        em.getTransaction().commit();
+
+        e = em.find(Employee.class, followedId);
+        request.getSession().setAttribute("flush", e.getName() + "さんをフォローしました。");
+        em.close();
+
+        response.sendRedirect(request.getContextPath() + "/employees/index");
 	}
-
 }

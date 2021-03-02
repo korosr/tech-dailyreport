@@ -35,12 +35,15 @@ public class ReportsIndexServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		EntityManager em = DBUtil.createEntityManager();
 
+		//すべての従業員の日報取得
         int page;
         try{
             page = Integer.parseInt(request.getParameter("page"));
         } catch(Exception e) {
             page = 1;
         }
+
+
         List<Report> reports = em.createNamedQuery("getAllReports", Report.class)
                                   .setFirstResult(15 * (page - 1))
                                   .setMaxResults(15)
@@ -54,6 +57,31 @@ public class ReportsIndexServlet extends HttpServlet {
         request.setAttribute("reports", reports);
         request.setAttribute("reports_count", reports_count);
         request.setAttribute("page", page);
+
+
+        //フォローした従業員の日報取得
+        int page_follow;
+        try{
+            page_follow = Integer.parseInt(request.getParameter("page"));
+        } catch(Exception e) {
+            page_follow = 1;
+        }
+
+
+        List<Report> reports_follow = em.createNamedQuery("getAllReports", Report.class)
+                                  .setFirstResult(15 * (page_follow - 1))
+                                  .setMaxResults(15)
+                                  .getResultList();
+
+        long reports_count_follow = (long)em.createNamedQuery("getReportsCount", Long.class)
+                                     .getSingleResult();
+
+        em.close();
+
+        request.setAttribute("reports_follow", reports_follow);
+        request.setAttribute("reports_count", reports_count_follow);
+        request.setAttribute("page", page_follow);
+
         if(request.getSession().getAttribute("flush") != null) {
             request.setAttribute("flush", request.getSession().getAttribute("flush"));
             request.getSession().removeAttribute("flush");

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import models.Employee;
+import models.Relationship;
 import util.DBUtil;
 
 /**
@@ -30,10 +31,12 @@ public class IndexServlet extends HttpServlet {
     }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(Ht
+	 * tpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		EntityManager em = DBUtil.createEntityManager();
+		Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
 
         int page = 1;
         try{
@@ -47,6 +50,14 @@ public class IndexServlet extends HttpServlet {
         long employees_count = (long)em.createNamedQuery("getEmployeesCount", Long.class)
                                        .getSingleResult();
 
+        //フォロー機能
+        List<Relationship> relationships = em.createNamedQuery("followCheck", Relationship.class)
+        		.setParameter("follower_id", login_employee.getId())
+        		.getResultList();
+        for(Relationship i : relationships) {
+        	System.out.println("フォローされてる人のID: " + i.getFollowed_id());
+        	System.out.println("フォローしてる人のID: " + i.getFollower_id());
+        }
         em.close();
 
         request.setAttribute("employees", employees);

@@ -35,7 +35,14 @@
 	                    </td>
 	                    </c:if>
 	                    <td>
-	                    	<a href="<c:url value='/employees/follow?id=${employee.id}' />"><button type="button">フォロー</button></a>
+	                    <%--<c:choose>
+	                    	<c:when test=""> --%>
+	                    		<a href="<c:url value='/employees/follow?id=${employee.id}' />"><button type="button" <c:if test="${sessionScope.login_employee.id == employee.id}">disabled</c:if>>フォロー</button></a>
+	                    	<%--</c:when>
+	                    	<c:otherwise>
+	                    		<>
+	                    	</c:otherwise>
+	                    </c:choose>--%>
 	                    </td>
                     </tr>
                 </c:forEach>
