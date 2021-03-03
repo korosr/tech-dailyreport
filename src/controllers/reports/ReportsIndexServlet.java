@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import models.Employee;
 import models.Report;
 import util.DBUtil;
 
@@ -60,26 +61,29 @@ public class ReportsIndexServlet extends HttpServlet {
 
 
         //フォローした従業員の日報取得
+        Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
+
         int page_follow;
+
         try{
             page_follow = Integer.parseInt(request.getParameter("page"));
         } catch(Exception e) {
             page_follow = 1;
         }
 
-
-        List<Report> reports_follow = em.createNamedQuery("getAllReports", Report.class)
+        List<Report> reports_follow = em.createNamedQuery("getFollowedReports", Report.class)
+                                  .setParameter("relationship", login_employee.getId())
                                   .setFirstResult(15 * (page_follow - 1))
                                   .setMaxResults(15)
                                   .getResultList();
 
-        long reports_count_follow = (long)em.createNamedQuery("getReportsCount", Long.class)
-                                     .getSingleResult();
+//        long reports_count_follow = (long)em.createNamedQuery("getReportsCount", Long.class)
+//                                     .getSingleResult();
 
         em.close();
 
         request.setAttribute("reports_follow", reports_follow);
-        request.setAttribute("reports_count", reports_count_follow);
+        //request.setAttribute("reports_count", reports_count_follow);
         request.setAttribute("page", page_follow);
 
         if(request.getSession().getAttribute("flush") != null) {

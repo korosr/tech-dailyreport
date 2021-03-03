@@ -2,6 +2,7 @@ package models;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -19,7 +21,7 @@ import javax.persistence.Table;
 @NamedQueries({
 	@NamedQuery(
 			name = "getAllReports",
-			query = "SELECT r FROM Report AS r WHERE ORDER BY r.id DESC"
+			query = "SELECT r FROM Report AS r ORDER BY r.id DESC"
 			),
 	@NamedQuery(
 			name = "getReportsCount",
@@ -32,7 +34,11 @@ import javax.persistence.Table;
 	@NamedQuery(
 			name = "getMyReportsCount",
 			query = "SELECT COUNT(r) FROM Report AS r WHERE r.employee = :employee"
-			)
+			),
+	@NamedQuery(
+			name = "getFollowedReports",
+			query = "SELECT r FROM Report AS r WHERE r.relationship = :relationship"
+			),
 })
 
 @Entity
@@ -45,6 +51,10 @@ public class Report {
 	@ManyToOne//多対1
 	@JoinColumn(name = "employee_id", nullable = false)
 	private Employee employee;
+
+	@ManyToMany
+	@JoinColumn(name = "followed_id", nullable = false)
+	private List<Relationship> relationship;
 
 	@Column(name = "report_date", nullable = false)
 	private Date report_date;
