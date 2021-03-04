@@ -53,7 +53,7 @@ public class ReportsIndexServlet extends HttpServlet {
         long reports_count = (long)em.createNamedQuery("getReportsCount", Long.class)
                                      .getSingleResult();
 
-        em.close();
+        //em.close();
 
         request.setAttribute("reports", reports);
         request.setAttribute("reports_count", reports_count);
@@ -72,7 +72,7 @@ public class ReportsIndexServlet extends HttpServlet {
         }
 
         List<Report> reports_follow = em.createNamedQuery("getFollowedReports", Report.class)
-                                  .setParameter("relationship", login_employee.getId())
+        				.setParameter("followed_id", login_employee.getId())
                                   .setFirstResult(15 * (page_follow - 1))
                                   .setMaxResults(15)
                                   .getResultList();

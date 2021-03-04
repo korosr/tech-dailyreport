@@ -51,7 +51,7 @@
                     <th class="report_title">タイトル</th>
                     <th class="report_action">操作</th>
                 </tr>
-                <c:forEach var="report" items="${reports}" varStatus="status">
+                <c:forEach var="report" items="${reports_follow}" varStatus="status">
                     <tr class="row${status.count % 2}">
                         <td class="report_name"><c:out value="${report.employee.name}" /></td>
                         <td class="report_date"><fmt:formatDate value='${report.report_date}' pattern='yyyy-MM-dd' /></td>
