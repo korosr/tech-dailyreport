@@ -38,6 +38,7 @@ import javax.persistence.Table;
 	@NamedQuery(
 			name = "getFollowedReports",
 			query = "SELECT r FROM Report r INNER JOIN r.relationship p WHERE p.follower_id = :followed_id"
+					//SELECT reports.content FROM Reports INNER JOIN Relationships ON reports.employee_id = relationships.followed_id WHERE relationships.follower_id = 1
 			)
 })
 
@@ -55,7 +56,6 @@ public class Report {
 	@ManyToMany
 	@JoinColumn(name = "followed_id", referencedColumnName = "employee_id")
 	private List<Relationship> relationship;
-	//SELECT reports.content FROM Reports INNER JOIN Relationships ON reports.employee_id = relationships.followed_id WHERE relationships.follower_id = 1
 
 	@Column(name = "report_date", nullable = false)
 	private Date report_date;
@@ -66,7 +66,6 @@ public class Report {
 	@Lob//テキストエリアの指定(改行も含めてDBに保存できる)
 	@Column(name = "content", nullable = false)
 	private String content;
-
 
 	@Column(name = "created_at", nullable = false)
 	private Timestamp created_at;
