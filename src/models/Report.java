@@ -2,7 +2,6 @@ package models;
 
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,8 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -35,11 +35,17 @@ import javax.persistence.Table;
 			name = "getMyReportsCount",
 			query = "SELECT COUNT(r) FROM Report AS r WHERE r.employee = :employee"
 			),
-	@NamedQuery(
-			name = "getFollowedReports",
-			query = "SELECT r FROM Report r INNER JOIN r.relationship p WHERE p.follower_id = :followed_id"
-					//SELECT reports.content FROM Reports INNER JOIN Relationships ON reports.employee_id = relationships.followed_id WHERE relationships.follower_id = 1
-			)
+})
+@NamedNativeQueries ({
+	@NamedNativeQuery(
+			name="getFollowedReports",
+			query="SELECT r.content, r.report_date, r.title, r.id, e.name  FROM reports r JOIN relationships s on r.employee_id = s.followed_id JOIN employees e ON r.employee_id = e.id WHERE s.follower_id = ?",
+			resultClass = Report.class
+		),
+	@NamedNativeQuery(
+			name="getCountFollowedReports",
+			query="SELECT COUNT(r.id)  FROM reports r JOIN relationships s on r.employee_id = s.followed_id JOIN employees e ON r.employee_id = e.id WHERE s.follower_id = ?"
+		),
 })
 
 @Entity
@@ -52,10 +58,6 @@ public class Report {
 	@ManyToOne//多対1
 	@JoinColumn(name = "employee_id", nullable = false)
 	private Employee employee;
-
-	@ManyToMany
-	@JoinColumn(name = "followed_id", referencedColumnName = "employee_id")
-	private List<Relationship> relationship;
 
 	@Column(name = "report_date", nullable = false)
 	private Date report_date;

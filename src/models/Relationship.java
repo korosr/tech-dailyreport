@@ -26,11 +26,11 @@ public class Relationship {
 
 	//フォローされている人のID
 	@Column(name = "followed_id", nullable = false)
-	private int followed_id;
+	private Integer followed_id;
 
 	//フォローしている人のID
 	@Column(name = "follower_id", nullable = false)
-	private int follower_id;
+	private Integer follower_id;
 
 	public Integer getId() {
 		return id;

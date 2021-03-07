@@ -35,14 +35,19 @@
 	                    </td>
 	                    </c:if>
 	                    <td>
-	                    <%--<c:choose>
-	                    	<c:when test=""> --%>
-	                    		<a href="<c:url value='/employees/follow?id=${employee.id}' />"><button type="button" <c:if test="${sessionScope.login_employee.id == employee.id}">disabled</c:if>>フォロー</button></a>
-	                    	<%--</c:when>
-	                    	<c:otherwise>
-	                    		<>
-	                    	</c:otherwise>
-	                    </c:choose>--%>
+	                    	<c:forEach var="relationship" items="${relationships}" varStatus="status">
+			                    <c:choose>
+			                    	<c:when test="${relationship.followed_id != employee.id}">
+			                    		<a href="<c:url value='/employees/follow?id=${employee.id}' />"><button type="button" <c:if test="${sessionScope.login_employee.id == employee.id}">disabled</c:if>>フォロー</button></a>
+			                    	</c:when>
+			                    	<c:otherwise>
+			                    		<a href="<c:url value='/employees/follow?id=${employee.id}' />"><button type="button" <c:if test="${sessionScope.login_employee.id == employee.id}">disabled</c:if>>フォロー解除</button></a>
+			                    	</c:otherwise>
+			                    </c:choose>
+			                 </c:forEach>
+			                 <c:if test="${relationships.size() == 0}">
+			                 	<a href="<c:url value='/employees/follow?id=${employee.id}' />"><button type="button" <c:if test="${sessionScope.login_employee.id == employee.id}">disabled</c:if>>フォロー</button></a>
+			                 </c:if>
 	                    </td>
                     </tr>
                 </c:forEach>

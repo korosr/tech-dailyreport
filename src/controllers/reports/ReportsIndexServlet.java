@@ -1,9 +1,11 @@
 package controllers.reports;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -53,38 +55,38 @@ public class ReportsIndexServlet extends HttpServlet {
         long reports_count = (long)em.createNamedQuery("getReportsCount", Long.class)
                                      .getSingleResult();
 
-        //em.close();
-
         request.setAttribute("reports", reports);
         request.setAttribute("reports_count", reports_count);
         request.setAttribute("page", page);
 
 
         //フォローした従業員の日報取得
-        Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
-
         int page_follow;
-
         try{
-            page_follow = Integer.parseInt(request.getParameter("page"));
+            page_follow = Integer.parseInt(request.getParameter("page_follow"));
         } catch(Exception e) {
             page_follow = 1;
         }
+        //ログインユーザ情報取得
+        Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
+        //ログインユーザがフォローしているユーザの従業員IDを取得
 
-        List<Report> reports_follow = em.createNamedQuery("getFollowedReports", Report.class)
-        				.setParameter("followed_id", login_employee.getId())
-                                  .setFirstResult(15 * (page_follow - 1))
-                                  .setMaxResults(15)
-                                  .getResultList();
+        //ログインユーザを基にフォローしているユーザのレポートを取得
+        Query query = em.createNamedQuery("getFollowedReports");
+        query.setParameter(1, login_employee.getId())
+        .setFirstResult(15 * (page - 1))
+        .setMaxResults(15);
+        List<Report> reports_follow = query.getResultList();
 
-//        long reports_count_follow = (long)em.createNamedQuery("getReportsCount", Long.class)
-//                                     .getSingleResult();
+        query = em.createNamedQuery("getCountFollowedReports").setParameter(1, login_employee.getId());
+
+        Long reports_count_follow =((BigInteger) query.getSingleResult()).longValue();
 
         em.close();
 
         request.setAttribute("reports_follow", reports_follow);
-        //request.setAttribute("reports_count", reports_count_follow);
-        request.setAttribute("page", page_follow);
+        request.setAttribute("reports_count_follow", reports_count_follow);
+        request.setAttribute("page_follow", page_follow);
 
         if(request.getSession().getAttribute("flush") != null) {
             request.setAttribute("flush", request.getSession().getAttribute("flush"));
