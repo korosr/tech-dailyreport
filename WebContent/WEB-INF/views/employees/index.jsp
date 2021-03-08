@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="models.Relationship" %>
+<%@ page import="java.util.List" %>
+<% List<Relationship> relationships = (List<Relationship>)request.getAttribute("relationships"); %>
 <c:import url="../layout/app.jsp">
     <c:param name="content">
         <c:if test="${flush != null}">
@@ -35,18 +38,24 @@
 	                    </td>
 	                    </c:if>
 	                    <td>
-	                    	<c:forEach var="relationship" items="${relationships}" varStatus="status">
-			                    <c:choose>
-			                    	<c:when test="${relationship.followed_id != employee.id}">
-			                    		<a href="<c:url value='/employees/follow?id=${employee.id}' />"><button type="button" <c:if test="${sessionScope.login_employee.id == employee.id}">disabled</c:if>>フォロー</button></a>
-			                    	</c:when>
-			                    	<c:otherwise>
-			                    		<a href="<c:url value='/employees/follow?id=${employee.id}' />"><button type="button" <c:if test="${sessionScope.login_employee.id == employee.id}">disabled</c:if>>フォロー解除</button></a>
-			                    	</c:otherwise>
-			                    </c:choose>
-			                 </c:forEach>
+							<c:set var="empId" value="${employee.id}"></c:set>
+			                 <%
+								int employee_id = (int) pageContext.getAttribute("empId");
+			                 	for(Relationship r : relationships){
+									if(r.getFollowed_id() != employee_id){
+									%>
+									<a href="<c:url value='/employees/follow?follow=true&empId=${employee.id}' />"><button type="button" <c:if test="${sessionScope.login_employee.id == employee.id}">disabled</c:if>>フォロー</button></a>
+									<%
+									break;
+									}else if(r.getFollowed_id() == employee_id){
+									%>
+										<a href="follow?follow=false&relationId=<%= r.getId()%>&empId=<%= employee_id %>"><button type="button" <c:if test="${sessionScope.login_employee.id == employee.id}">disabled</c:if>>フォロー解除</button></a>
+									<%
+									}
+			                 	}
+			                 %>
 			                 <c:if test="${relationships.size() == 0}">
-			                 	<a href="<c:url value='/employees/follow?id=${employee.id}' />"><button type="button" <c:if test="${sessionScope.login_employee.id == employee.id}">disabled</c:if>>フォロー</button></a>
+			                 	<a href="<c:url value='/employees/follow?follow=true&empId=${employee.id}' />"><button type="button" <c:if test="${sessionScope.login_employee.id == employee.id}">disabled</c:if>>フォロー</button></a>
 			                 </c:if>
 	                    </td>
                     </tr>

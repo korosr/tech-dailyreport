@@ -36,23 +36,37 @@ public class FollowServlet extends HttpServlet {
 		EntityManager em = DBUtil.createEntityManager();
 
 		//フォローしたい人のID
-        int followedId = Integer.parseInt(request.getParameter("id"));
+        int followedId = Integer.parseInt(request.getParameter("empId"));
+        int relationId = 0;
+        if(request.getParameter("relationId") != null) {
+        	relationId = Integer.parseInt(request.getParameter("relationId"));
+        }
+        String follow = request.getParameter("follow");
 		Employee e = (Employee) request.getSession().getAttribute("login_employee");
 		//ログインユーザのID
 		int loginUserId = e.getId();
 
-        Relationship r = new Relationship();
-        r.setFollowed_id(followedId);
-        r.setFollower_id(loginUserId);
+		if("true".equals(follow)) {
+	        Relationship r = new Relationship();
+	        r.setFollowed_id(followedId);
+	        r.setFollower_id(loginUserId);
 
-        em.getTransaction().begin();
-        em.persist(r);
-        em.getTransaction().commit();
+	        em.getTransaction().begin();
+	        em.persist(r);
+	        em.getTransaction().commit();
+	        e = em.find(Employee.class, followedId);
+	        request.getSession().setAttribute("flush", e.getName() + "さんをフォローしました。");
+		} else {
+			String name = e.getName();
+			em.getTransaction().begin();
+			em.createNamedQuery("deleteRelationship")
+			.setParameter("id", relationId)
+			.executeUpdate();
+			em.getTransaction().commit();
 
-        e = em.find(Employee.class, followedId);
-        request.getSession().setAttribute("flush", e.getName() + "さんをフォローしました。");
+			request.getSession().setAttribute("flush", name + "さんのフォローを解除しました。");
+		}
         em.close();
-
         response.sendRedirect(request.getContextPath() + "/employees/index");
 	}
 }

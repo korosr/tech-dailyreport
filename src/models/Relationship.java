@@ -14,7 +14,11 @@ import javax.persistence.Table;
     @NamedQuery(
         name = "followCheck",
         query = "SELECT r FROM Relationship AS r WHERE r.follower_id = :follower_id"
-    )
+    ),
+    @NamedQuery(
+        name = "deleteRelationship",
+        query = "DELETE FROM Relationship AS r WHERE r.id = :id"
+    ),
 })
 
 @Entity
