@@ -46,11 +46,9 @@
 									%>
 									<a href="<c:url value='/employees/follow?follow=true&empId=${employee.id}' />"><button type="button" <c:if test="${sessionScope.login_employee.id == employee.id}">disabled</c:if>>フォロー</button></a>
 									<%
-									break;
 									}else if(r.getFollowed_id() == employee_id){
 									%>
 										<a href="follow?follow=false&relationId=<%= r.getId()%>&empId=<%= employee_id %>"><button type="button" <c:if test="${sessionScope.login_employee.id == employee.id}">disabled</c:if>>フォロー解除</button></a>
-										break;
 									<%
 									}
 			                 	}

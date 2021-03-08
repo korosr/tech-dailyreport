@@ -57,7 +57,7 @@ public class FollowServlet extends HttpServlet {
 	        e = em.find(Employee.class, followedId);
 	        request.getSession().setAttribute("flush", e.getName() + "さんをフォローしました。");
 		} else {
-			String name = e.getName();
+			String name = em.find(Employee.class, followedId).getName();
 			em.getTransaction().begin();
 			em.createNamedQuery("deleteRelationship")
 			.setParameter("id", relationId)
