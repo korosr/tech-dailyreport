@@ -13,11 +13,11 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(
         name = "followCheck",
-        query = "SELECT r FROM Relationship AS r WHERE r.follower_id = :follower_id"
+        query = "SELECT COUNT(r) FROM Relationship AS r WHERE r.follower_id = :follower_id and r.followed_id = :followed_id"
     ),
     @NamedQuery(
         name = "deleteRelationship",
-        query = "DELETE FROM Relationship AS r WHERE r.id = :id"
+        query = "DELETE FROM Relationship AS r WHERE r.followed_id = :followed_id and r.follower_id = :follower_id"
     ),
 })
 

@@ -31,22 +31,22 @@ public class FollowServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		EntityManager em = DBUtil.createEntityManager();
 
+		//フォローorフォロー解除かのパラメータ取得
+		String whichFollow = request.getParameter("follow");
+		System.out.println("whichFollow ; " + whichFollow);
+
 		//フォローしたい人のID
         int followedId = Integer.parseInt(request.getParameter("empId"));
-        int relationId = 0;
-        if(request.getParameter("relationId") != null) {
-        	relationId = Integer.parseInt(request.getParameter("relationId"));
-        }
-        String follow = request.getParameter("follow");
+
 		Employee e = (Employee) request.getSession().getAttribute("login_employee");
 		//ログインユーザのID
 		int loginUserId = e.getId();
 
-		if("true".equals(follow)) {
+		if("following".equals(whichFollow)) {
 	        Relationship r = new Relationship();
 	        r.setFollowed_id(followedId);
 	        r.setFollower_id(loginUserId);
@@ -60,7 +60,8 @@ public class FollowServlet extends HttpServlet {
 			String name = em.find(Employee.class, followedId).getName();
 			em.getTransaction().begin();
 			em.createNamedQuery("deleteRelationship")
-			.setParameter("id", relationId)
+			.setParameter("followed_id", followedId)
+			.setParameter("follower_id", loginUserId)
 			.executeUpdate();
 			em.getTransaction().commit();
 

@@ -2,7 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="models.Relationship" %>
 <%@ page import="java.util.List" %>
-<% List<Relationship> relationships = (List<Relationship>)request.getAttribute("relationships"); %>
 <c:import url="../layout/app.jsp">
     <c:param name="content">
         <c:if test="${flush != null}">
@@ -38,24 +37,17 @@
 	                    </td>
 	                    </c:if>
 	                    <td>
-							<c:set var="empId" value="${employee.id}"></c:set>
-			                 <%
-								int employee_id = (int) pageContext.getAttribute("empId");
-			                 	for(Relationship r : relationships){
-									if(r.getFollowed_id() != employee_id){
-									%>
-									<a href="<c:url value='/employees/follow?follow=true&empId=${employee.id}' />"><button type="button" <c:if test="${sessionScope.login_employee.id == employee.id}">disabled</c:if>>フォロー</button></a>
-									<%
-									}else if(r.getFollowed_id() == employee_id){
-									%>
-										<a href="follow?follow=false&relationId=<%= r.getId()%>&empId=<%= employee_id %>"><button type="button" <c:if test="${sessionScope.login_employee.id == employee.id}">disabled</c:if>>フォロー解除</button></a>
-									<%
-									}
-			                 	}
-			                 %>
-			                 <c:if test="${relationships.size() == 0}">
-			                 	<a href="<c:url value='/employees/follow?follow=true&empId=${employee.id}' />"><button type="button" <c:if test="${sessionScope.login_employee.id == employee.id}">disabled</c:if>>フォロー</button></a>
-			                 </c:if>
+	                    <c:if test="${sessionScope.login_employee.id != employee.id}">
+							<form action="<c:url value='/employees/follow?empId=${employee.id}'/>" method="POST">
+								<!--<c:if test="${relationships== 'following'}">
+								<button type="submit" name="follow" value="following">フォロー</button>
+								</c:if>
+								<c:if test="${relationships == 'deleteFollowing'}">
+								<button type="submit" name="follow" value="deleteFollowing">フォロー解除</button>
+								</c:if>-->
+							</form>
+							<p>${relationships}+ ${employee.id}</p>
+						</c:if>
 	                    </td>
                     </tr>
                 </c:forEach>

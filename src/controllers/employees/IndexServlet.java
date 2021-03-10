@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import models.Employee;
-import models.Relationship;
 import util.DBUtil;
 
 /**
@@ -50,17 +49,33 @@ public class IndexServlet extends HttpServlet {
         long employees_count = (long)em.createNamedQuery("getEmployeesCount", Long.class)
                                        .getSingleResult();
 
-        //フォロー機能
-        List<Relationship> relationships = em.createNamedQuery("followCheck", Relationship.class)
-        		.setParameter("follower_id", login_employee.getId())
-        		.getResultList();
-        for(Relationship i : relationships) {
-        	System.out.println("フォローされてる人のID: " + i.getFollowed_id());
-        	System.out.println("フォローしてる人のID: " + i.getFollower_id());
+        for(Employee e : employees) {
+	        //フォローしているかどうか
+	        long followed_count = (long)em.createNamedQuery("followCheck")
+	        		.setParameter("followed_id", e.getId())
+	        		.setParameter("follower_id", login_employee.getId())
+	        		.getSingleResult();
+
+	        System.out.println("followed_count " + followed_count);
+	        if(followed_count == 0) {
+	        	request.setAttribute("relationships" + e.getId(), "following");
+	        }else {
+	        	request.setAttribute("relationships" + e.getId(), "deleteFollowing");
+	        }
         }
+
+//        List<Relationship> relationships = em.createNamedQuery("followCheck", Relationship.class)
+//        		.setParameter("follower_id", login_employee.getId())
+//        		.getResultList();
+//        for(Relationship i : relationships) {
+//        	System.out.println("フォローされてる人のID: " + i.getFollowed_id());
+//        	System.out.println("フォローしてる人のID: " + i.getFollower_id());
+//        }
+
+
         em.close();
 
-        request.setAttribute("relationships", relationships);
+       // request.setAttribute("relationships", relationships);
         request.setAttribute("employees", employees);
         request.setAttribute("employees_count", employees_count);
         request.setAttribute("page", page);
