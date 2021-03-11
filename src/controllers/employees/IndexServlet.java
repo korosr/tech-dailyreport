@@ -35,7 +35,6 @@ public class IndexServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		EntityManager em = DBUtil.createEntityManager();
-		Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
 
         int page = 1;
         try{
@@ -48,30 +47,6 @@ public class IndexServlet extends HttpServlet {
 
         long employees_count = (long)em.createNamedQuery("getEmployeesCount", Long.class)
                                        .getSingleResult();
-
-        for(Employee e : employees) {
-	        //フォローしているかどうか
-	        long followed_count = (long)em.createNamedQuery("followCheck")
-	        		.setParameter("followed_id", e.getId())
-	        		.setParameter("follower_id", login_employee.getId())
-	        		.getSingleResult();
-
-	        System.out.println("followed_count " + followed_count);
-	        if(followed_count == 0) {
-	        	request.setAttribute("relationships" + e.getId(), "following");
-	        }else {
-	        	request.setAttribute("relationships" + e.getId(), "deleteFollowing");
-	        }
-        }
-
-//        List<Relationship> relationships = em.createNamedQuery("followCheck", Relationship.class)
-//        		.setParameter("follower_id", login_employee.getId())
-//        		.getResultList();
-//        for(Relationship i : relationships) {
-//        	System.out.println("フォローされてる人のID: " + i.getFollowed_id());
-//        	System.out.println("フォローしてる人のID: " + i.getFollower_id());
-//        }
-
 
         em.close();
 

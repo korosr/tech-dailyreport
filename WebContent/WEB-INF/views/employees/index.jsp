@@ -39,14 +39,9 @@
 	                    <td>
 	                    <c:if test="${sessionScope.login_employee.id != employee.id}">
 							<form action="<c:url value='/employees/follow?empId=${employee.id}'/>" method="POST">
-								<!--<c:if test="${relationships== 'following'}">
 								<button type="submit" name="follow" value="following">フォロー</button>
-								</c:if>
-								<c:if test="${relationships == 'deleteFollowing'}">
 								<button type="submit" name="follow" value="deleteFollowing">フォロー解除</button>
-								</c:if>-->
 							</form>
-							<p>${relationships}+ ${employee.id}</p>
 						</c:if>
 	                    </td>
                     </tr>
