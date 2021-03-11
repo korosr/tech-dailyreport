@@ -42,9 +42,6 @@ public class ReportsReactionServlet extends HttpServlet {
 		Employee e = (Employee) request.getSession().getAttribute("login_employee");
 		int loginUserId = e.getId();
 
-		System.out.println("reportId" + reportId);
-		System.out.println("loginUserId" + loginUserId);
-
 		Reaction r = new Reaction();
 		r.setEmployee_id(loginUserId);
 		r.setReport_id(reportId);
@@ -54,6 +51,6 @@ public class ReportsReactionServlet extends HttpServlet {
 		em.getTransaction().commit();
 
 		em.close();
-        response.sendRedirect(request.getContextPath() + "/reports/show");
+        response.sendRedirect(request.getContextPath() + "/reports/show?id=" + Integer.toString(reportId) );
 	}
 }

@@ -5,9 +5,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Table(name = "reactions")
+@NamedQueries({
+    @NamedQuery(
+        name = "getReactionsCount",
+        query = "SELECT COUNT(r) FROM Reaction AS r"
+    ),
+    @NamedQuery(
+        name = "reactionCheck",
+        query = "DELETE FROM Relationship AS r WHERE r.followed_id = :followed_id and r.follower_id = :follower_id"
+    ),
+})
 @Entity
 public class Reaction {
 	@Id
