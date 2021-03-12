@@ -19,4 +19,14 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  <servlet>
+    <description></description>
+    <display-name>TimecardInServlet</display-name>
+    <servlet-name>TimecardInServlet</servlet-name>
+    <servlet-class>controllers.timecard.TimecardInServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TimecardInServlet</servlet-name>
+    <url-pattern>/TimecardInServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

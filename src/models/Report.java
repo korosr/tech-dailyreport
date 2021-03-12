@@ -55,7 +55,7 @@ public class Report {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@ManyToOne//多対1
+	@ManyToOne
 	@JoinColumn(name = "employee_id", nullable = false)
 	private Employee employee;
 
@@ -74,6 +74,10 @@ public class Report {
 
 	@Column(name = "updated_at", nullable = false)
 	private Timestamp updated_at;
+
+	@ManyToOne
+	@JoinColumn(name = "timecard_id", nullable = true)
+	private TimeCard timecard;
 
 	public Integer getId() {
 		return id;
@@ -130,4 +134,13 @@ public class Report {
 	public void setUpdated_at(Timestamp updated_at) {
 		this.updated_at = updated_at;
 	}
+
+	public TimeCard getTimecard() {
+		return timecard;
+	}
+
+	public void setTimecard(TimeCard timecard) {
+		this.timecard = timecard;
+	}
+
 }

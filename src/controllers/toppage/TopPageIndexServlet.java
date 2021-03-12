@@ -1,6 +1,9 @@
 package controllers.toppage;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -53,6 +56,31 @@ public class TopPageIndexServlet extends HttpServlet {
         long reports_count = (long)em.createNamedQuery("getMyReportsCount", Long.class)
                                      .setParameter("employee", login_employee)
                                      .getSingleResult();
+
+        //出退勤
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String s = sdf.format(new Date()) + " 00:00:00";
+        Date d = null;
+		try {
+			d = sdf.parse(s);
+		} catch (ParseException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
+
+
+        long today_card_count = (long)em.createNamedQuery("getInTimecard", Long.class)
+        		.setParameter("in_time", d)
+                .setParameter("employee_id", login_employee.getId())
+                .getSingleResult();
+
+        System.out.println("today_card_count = " + today_card_count);
+
+        if(today_card_count != 0) {
+        	request.setAttribute("inTimeOn", true);
+        }else {
+        	request.setAttribute("inTimeOn", false);
+        }
 
         em.close();
 

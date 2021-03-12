@@ -23,7 +23,7 @@
             <br /><br />
 
             <input type="hidden" name="_token" value="${_token}" />
-            <button type="submit">ログイン</button>
+            <button type="submit" class="btn btn-info">ログイン</button>
         </form>
     </c:param>
 </c:import>
