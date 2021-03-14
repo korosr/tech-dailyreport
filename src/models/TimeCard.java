@@ -14,9 +14,9 @@ import javax.persistence.Table;
 @Table(name = "timecards")
 @NamedQueries({
     @NamedQuery(
-        name = "getInTimecard",
-        query = "SELECT COUNT(t) FROM TimeCard AS t WHERE t.in_time > :in_time and t.employee_id = :employee_id"
-    )
+            name = "getInTimecard",
+            query = "SELECT t FROM TimeCard AS t WHERE t.in_time > :in_time and t.employee_id = :employee_id"
+     )
 })
 
 @Entity

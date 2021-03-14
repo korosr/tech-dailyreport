@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import models.Employee;
 import models.Report;
+import models.TimeCard;
 import util.DBUtil;
 
 /**
@@ -68,20 +69,24 @@ public class TopPageIndexServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 
+		List<TimeCard> tcList = em.createNamedQuery("getInTimecard", TimeCard.class)
+				.setParameter("in_time", d)
+				.setParameter("employee_id", login_employee.getId())
+				.getResultList();
 
-        long today_card_count = (long)em.createNamedQuery("getInTimecard", Long.class)
-        		.setParameter("in_time", d)
-                .setParameter("employee_id", login_employee.getId())
-                .getSingleResult();
 
-        System.out.println("today_card_count = " + today_card_count);
-
-        if(today_card_count != 0) {
-        	request.setAttribute("inTimeOn", true);
-        }else {
+        if(tcList.size() == 1) {
+        	request.setAttribute("timecard_id", tcList.get(0).getId());
+        	if(tcList.get(0).getOut_time() != null) {
+        		request.setAttribute("inTimeOut", false);
+        		request.setAttribute("inTimeOn", false);
+        	}else {
+        		request.setAttribute("inTimeOut", true);
+        		request.setAttribute("inTimeOn", true);
+        	}
+        }else if(tcList.size() == 0){
         	request.setAttribute("inTimeOn", false);
         }
-
         em.close();
 
         request.setAttribute("reports", reports);

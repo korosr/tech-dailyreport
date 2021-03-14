@@ -1,6 +1,7 @@
 package controllers.timecard;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.EntityManager;
@@ -36,19 +37,28 @@ public class TimecardInServlet extends HttpServlet {
 
 		EntityManager em = DBUtil.createEntityManager();
 
+		String timecard_id = request.getParameter("tc_id");
 		Employee e = (Employee) request.getSession().getAttribute("login_employee");
-		//ログインユーザのID
-		int loginUserId = e.getId();
+		if(timecard_id.isBlank()) {
+			//ログインユーザのID
+			int loginUserId = e.getId();
 
-		Date date = new Date();
-		TimeCard tc = new TimeCard();
-		tc.setIn_time(date);
-		tc.setEmployee_id(loginUserId);
+			Date date = new Date();
+			TimeCard tc = new TimeCard();
+			tc.setIn_time(date);
+			tc.setEmployee_id(loginUserId);
 
-		em.getTransaction().begin();
-        em.persist(tc);
-        em.getTransaction().commit();
 
+			em.getTransaction().begin();
+	        em.persist(tc);
+	        em.getTransaction().commit();
+
+	        SimpleDateFormat sdf = new SimpleDateFormat("h時m分");
+	        String time = sdf.format(date);
+	        request.getSession().setAttribute("flush", "おはようございます！本日は" + time + "に出勤しました！");
+		}else {
+			request.getSession().setAttribute("flush", "出退勤エラー");
+		}
         response.sendRedirect(request.getContextPath() + "/index.html");
 	}
 }
