@@ -3,6 +3,8 @@ package controllers.reports;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import models.Employee;
 import models.Report;
+import models.TimeCard;
 import models.validators.ReportValidator;
 import util.DBUtil;
 
@@ -43,7 +46,11 @@ public class ReportsCreateServlet extends HttpServlet {
 
             Report r = new Report();
 
-            r.setEmployee((Employee)request.getSession().getAttribute("login_employee"));
+            //ログインユーザ取得
+    		Employee e = (Employee) request.getSession().getAttribute("login_employee");
+    		int loginUserId = e.getId();
+
+            r.setEmployee(e);
 
             Date report_date = new Date(System.currentTimeMillis());
             String rd_str = request.getParameter("report_date");
@@ -58,6 +65,26 @@ public class ReportsCreateServlet extends HttpServlet {
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
             r.setCreated_at(currentTime);
             r.setUpdated_at(currentTime);
+
+            //出退勤時刻を登録
+            java.util.Date d = null;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String s = sdf.format(new java.util.Date()) + " 00:00:00";
+    		try {
+    			d = sdf.parse(s);
+    		} catch (ParseException pe) {
+    			// TODO 自動生成された catch ブロック
+    			pe.printStackTrace();
+    		}
+
+    		List<TimeCard> tcList = em.createNamedQuery("getInTimecard", TimeCard.class)
+    				.setParameter("in_time", d)
+    				.setParameter("employee_id", loginUserId)
+    				.getResultList();
+
+    		if(tcList.size() == 1) {
+    			r.setTimecard(tcList.get(0));
+    		}
 
             List<String> errors = ReportValidator.validate(r);
             if(errors.size() > 0) {

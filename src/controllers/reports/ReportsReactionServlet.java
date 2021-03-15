@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import models.Employee;
-import models.Reaction;
+import models.ReactionManage;
 import util.DBUtil;
 
 /**
@@ -38,13 +38,17 @@ public class ReportsReactionServlet extends HttpServlet {
 		//レポートID取得
 		int reportId = Integer.parseInt(request.getParameter("id"));
 
+		//リアクションID取得
+		int reactionId = Integer.parseInt(request.getParameter("reaction_id"));
+
 		//ログインユーザ取得
 		Employee e = (Employee) request.getSession().getAttribute("login_employee");
 		int loginUserId = e.getId();
 
-		Reaction r = new Reaction();
+		ReactionManage r = new ReactionManage();
 		r.setEmployee_id(loginUserId);
 		r.setReport_id(reportId);
+		r.setReaction_id(reactionId);
 
 		em.getTransaction().begin();
 		em.persist(r);

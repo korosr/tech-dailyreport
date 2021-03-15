@@ -1,6 +1,9 @@
 package controllers.reports;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.servlet.RequestDispatcher;
@@ -39,12 +42,38 @@ public class ReportsShowServlet extends HttpServlet {
         request.setAttribute("report", r);
         request.setAttribute("_token", request.getSession().getId());
 
-        //いいね数取得
-        long reactions_count = (long)em.createNamedQuery("getReactionsCount", Long.class)
-                .getSingleResult();
+        //リアクション機能
+        List<Integer> reaction_id_list = em.createNamedQuery("getReactions", Integer.class)
+                .setParameter("report_id", r.getId())
+                .getResultList();
+
+        Map<String, Long> reaction_map = new HashMap<>();
+
+        for(int reaction_id : reaction_id_list) {
+	        long reaction_count = (long)em.createNamedQuery("getReactionsCount", Long.class)
+	        		.setParameter("report_id", r.getId())
+	        		.setParameter("reaction_id", reaction_id)
+	                .getSingleResult();
+
+	        //各リアクション数取得
+	        if(reaction_id == 1) {
+	        	reaction_map.put("iine_count", reaction_count);
+	        }else if(reaction_id == 2){
+	        	reaction_map.put("smile_count", reaction_count);
+	        }else if(reaction_id == 3){
+	        	reaction_map.put("big_count", reaction_count);
+	        }else if(reaction_id == 4){
+	        	reaction_map.put("sweat_count", reaction_count);
+	        }else if(reaction_id == 5){
+	        	reaction_map.put("bad_count", reaction_count);
+	        }
+        }
 
         em.close();
-        request.setAttribute("reactions_count", reactions_count);
+
+        for(Map.Entry<String, Long> entry : reaction_map.entrySet()) {
+        	request.setAttribute(entry.getKey(), entry.getValue());
+        }
 
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/show.jsp");
         rd.forward(request, response);
