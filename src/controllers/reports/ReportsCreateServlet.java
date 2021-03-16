@@ -84,9 +84,16 @@ public class ReportsCreateServlet extends HttpServlet {
 
     		if(tcList.size() == 1) {
     			r.setTimecard(tcList.get(0));
+    		}else if(tcList.size() == 0){
+    			//出勤ボタンが押されていない場合、日報を作成できない
+    			request.setAttribute("errors", "出勤ボタンが押されていません");
+                RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/new.jsp");
+                rd.forward(request, response);
     		}
 
             List<String> errors = ReportValidator.validate(r);
+            //出勤しているかのチェック
+
             if(errors.size() > 0) {
                 em.close();
 

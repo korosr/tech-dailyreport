@@ -17,7 +17,7 @@ import javax.persistence.Table;
     ),
     @NamedQuery(
         name = "getReactions",
-        query = "SELECT r.id FROM ReactionManage AS r WHERE r.report_id = :report_id"
+        query = "SELECT r.reaction_id FROM ReactionManage AS r WHERE r.report_id = :report_id"
     ),
 })
 @Entity
