@@ -67,7 +67,7 @@ public class FollowServlet extends HttpServlet {
 			        r.setFollower_id(loginUserId);
 
 			        em.getTransaction().begin();
-			        em.persist(r);
+
 			        em.getTransaction().commit();
 			        e = em.find(Employee.class, followedId);
 			        request.getSession().setAttribute("flush", e.getName() + "さんをフォローしました。");

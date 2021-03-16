@@ -48,24 +48,37 @@ public class ReportsShowServlet extends HttpServlet {
                 .getResultList();
 
         Map<String, Long> reaction_map = new HashMap<>();
+        Map<String, List<String>> reaction_user_map = new HashMap<>();
 
         for(int reaction_id : reaction_id_list) {
+        	//リアクション毎のカウント取得
 	        long reaction_count = (long)em.createNamedQuery("getReactionsCount", Long.class)
 	        		.setParameter("report_id", r.getId())
 	        		.setParameter("reaction_id", reaction_id)
 	                .getSingleResult();
 
+	        //リアクションしてくれたユーザを取得
+	        List<String> reaction_user_list = em.createNamedQuery("getReactionsUserName", String.class)
+	                .setParameter("report_id", r.getId())
+	                .setParameter("reaction_id", reaction_id)
+	                .getResultList();
+
 	        //各リアクション数取得
 	        if(reaction_id == 1) {
 	        	reaction_map.put("iine_count", reaction_count);
+	        	reaction_user_map.put("iine_users", reaction_user_list);
 	        }else if(reaction_id == 2){
 	        	reaction_map.put("smile_count", reaction_count);
+	        	reaction_user_map.put("smile_users", reaction_user_list);
 	        }else if(reaction_id == 3){
 	        	reaction_map.put("big_count", reaction_count);
+	        	reaction_user_map.put("big_users", reaction_user_list);
 	        }else if(reaction_id == 4){
 	        	reaction_map.put("sweat_count", reaction_count);
+	        	reaction_user_map.put("sweat_users", reaction_user_list);
 	        }else if(reaction_id == 5){
 	        	reaction_map.put("bad_count", reaction_count);
+	        	reaction_user_map.put("bad_users", reaction_user_list);
 	        }
         }
 
@@ -75,8 +88,11 @@ public class ReportsShowServlet extends HttpServlet {
         	request.setAttribute(entry.getKey(), entry.getValue());
         }
 
+        for(Map.Entry<String, List<String>> entry : reaction_user_map.entrySet()) {
+        	request.setAttribute(entry.getKey(), entry.getValue());
+        }
+
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/show.jsp");
         rd.forward(request, response);
 	}
-
 }

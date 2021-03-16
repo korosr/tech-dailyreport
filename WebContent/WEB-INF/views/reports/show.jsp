@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">
         <c:choose>
@@ -52,23 +53,23 @@
                 <div id="reactionBtn" class="m-2">
                 	<a href="<c:url value="/reports/reaction?id=${report.id}&reaction_id=1"/>"><i class="far fa-thumbs-up fa-2x"></i></a>
 	                <c:if test="${iine_count != 0}">
-	                	${iine_count}
+	                	<span data-toggle="tooltip" title="${iine_users[0]}さん<c:if test="${fn:length(iine_users) != 1}">、他${fn:length(iine_users)-1}人</c:if>がリアクションしました！">${iine_count}</span>
 	                </c:if>
 	                <a href="<c:url value="/reports/reaction?id=${report.id}&reaction_id=2"/>" class="ml-2"><i class="far fa-smile fa-2x"></i></a>
 	                <c:if test="${smile_count != 0}">
-	                	${smile_count}
+	                	<span data-toggle="tooltip" title="${smile_users[0]}さん<c:if test="${fn:length(smile_users) != 1}">、他${fn:length(smile_users)-1}人</c:if>がリアクションしました！">${smile_count}</span>
 	                </c:if>
 	                <a href="<c:url value="/reports/reaction?id=${report.id}&reaction_id=3"/>" class="ml-2"><i class="far fa-laugh-squint fa-2x"></i></a>
 	                <c:if test="${big_count != 0}">
-	                	${big_count}
+	                	<span data-toggle="tooltip" title="${big_users[0]}さん<c:if test="${fn:length(big_users) != 1}">、他${fn:length(big_users)-1}人</c:if>がリアクションしました！">${big_count}</span>
 	                </c:if>
 	                <a href="<c:url value="/reports/reaction?id=${report.id}&reaction_id=4"/>" class="ml-2"><i class="far fa-grin-beam-sweat fa-2x"></i></a>
 	                <c:if test="${sweat_count != 0}">
-	                	${sweat_count}
+	                	<span data-toggle="tooltip" title="${sweat_users[0]}さん<c:if test="${fn:length(sweat_users) != 1}">、他${fn:length(sweat_users)-1}人</c:if>がリアクションしました！">${sweat_count}</span>
 	                </c:if>
 	                <a href="<c:url value="/reports/reaction?id=${report.id}&reaction_id=5"/>" class="ml-2"><i class="far fa-frown fa-2x"></i></a>
 	                <c:if test="${bad_count != 0}">
-	                	${bad_count}
+	                	<span data-toggle="tooltip" title="${bad_users[0]}さん<c:if test="${fn:length(bad_users) != 1}">、他${fn:length(bad_users)-1}人</c:if>がリアクションしました！">${bad_count}</span>
 	                </c:if>
                 </div>
                 <c:if test="${sessionScope.login_employee.id == report.employee.id}">
