@@ -52,39 +52,36 @@ public class FollowServlet extends HttpServlet {
 				.setParameter("followed_id", followedId)
                 .getSingleResult();
 
-		System.out.println("existRelation" + existRelation);
-
 		//相手の名前
 		String name = em.find(Employee.class, followedId).getName();
 
+		if("following".equals(whichFollow)) {
+			if(existRelation != 0) {
+				request.getSession().setAttribute("flush", name + "さんは既にフォロー済みです。");
+			}else {
+		        Relationship r = new Relationship();
+		        r.setFollowed_id(followedId);
+		        r.setFollower_id(loginUserId);
 
-			if("following".equals(whichFollow)) {
-				if(existRelation != 0) {
-					request.getSession().setAttribute("flush", name + "さんは既にフォロー済みです。");
-				}else {
-			        Relationship r = new Relationship();
-			        r.setFollowed_id(followedId);
-			        r.setFollower_id(loginUserId);
+		        em.getTransaction().begin();
 
-			        em.getTransaction().begin();
-
-			        em.getTransaction().commit();
-			        e = em.find(Employee.class, followedId);
-			        request.getSession().setAttribute("flush", e.getName() + "さんをフォローしました。");
-				}
-			} else {
-				if(existRelation == 0) {
-					request.getSession().setAttribute("flush", name + "さんをフォローしていません。");
-				}else {
-					em.getTransaction().begin();
-					em.createNamedQuery("deleteRelationship")
-					.setParameter("followed_id", followedId)
-					.setParameter("follower_id", loginUserId)
-					.executeUpdate();
-					em.getTransaction().commit();
-					request.getSession().setAttribute("flush", name + "さんのフォローを解除しました。");
-				}
+		        em.getTransaction().commit();
+		        e = em.find(Employee.class, followedId);
+		        request.getSession().setAttribute("flush", e.getName() + "さんをフォローしました。");
 			}
+		} else {
+			if(existRelation == 0) {
+				request.getSession().setAttribute("flush", name + "さんをフォローしていません。");
+			}else {
+				em.getTransaction().begin();
+				em.createNamedQuery("deleteRelationship")
+				.setParameter("followed_id", followedId)
+				.setParameter("follower_id", loginUserId)
+				.executeUpdate();
+				em.getTransaction().commit();
+				request.getSession().setAttribute("flush", name + "さんのフォローを解除しました。");
+			}
+		}
 
         em.close();
         response.sendRedirect(request.getContextPath() + "/employees/index");
