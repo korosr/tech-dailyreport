@@ -50,7 +50,7 @@ public class IndexServlet extends HttpServlet {
 
         em.close();
 
-       // request.setAttribute("relationships", relationships);
+        //request.setAttribute("relationships", relationships);
         request.setAttribute("employees", employees);
         request.setAttribute("employees_count", employees_count);
         request.setAttribute("page", page);

@@ -20,8 +20,8 @@ import javax.persistence.Table;
         query = "SELECT r.reaction_id FROM ReactionManage AS r WHERE r.report_id = :report_id"
     ),
     @NamedQuery(
-            name = "getReactionsUserName",
-            query = "SELECT e.name FROM ReactionManage AS r, Employee AS e  WHERE r.report_id = :report_id and r.reaction_id = :reaction_id and r.employee_id = e.id"
+        name = "getReactionsUserName",
+        query = "SELECT e.name FROM ReactionManage AS r, Employee AS e  WHERE r.report_id = :report_id and r.reaction_id = :reaction_id and r.employee_id = e.id"
     ),
 })
 @Entity
