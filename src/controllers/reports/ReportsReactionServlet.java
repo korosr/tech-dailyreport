@@ -38,21 +38,28 @@ public class ReportsReactionServlet extends HttpServlet {
 		//レポートID取得
 		int reportId = Integer.parseInt(request.getParameter("id"));
 
-		//リアクションID取得
-		int reactionId = Integer.parseInt(request.getParameter("reaction_id"));
+		//リアクション取得
+		String good = request.getParameter("good");
 
 		//ログインユーザ取得
 		Employee e = (Employee) request.getSession().getAttribute("login_employee");
 		int loginUserId = e.getId();
 
-		ReactionManage r = new ReactionManage();
-		r.setEmployee_id(loginUserId);
-		r.setReport_id(reportId);
-		r.setReaction_id(reactionId);
-
-		em.getTransaction().begin();
-		em.persist(r);
-		em.getTransaction().commit();
+		if("on".equals(good)) {
+			ReactionManage r = new ReactionManage();
+			r.setEmployee_id(loginUserId);
+			r.setReport_id(reportId);
+			em.getTransaction().begin();
+			em.persist(r);
+			em.getTransaction().commit();
+		}else if("off".equals(good)){
+			em.getTransaction().begin();
+			em.createNamedQuery("deleteReaction")
+			.setParameter("report_id", reportId)
+			.setParameter("employee_id", loginUserId)
+			.executeUpdate();
+			em.getTransaction().commit();
+		}
 
 		em.close();
         response.sendRedirect(request.getContextPath() + "/reports/show?id=" + Integer.toString(reportId) );

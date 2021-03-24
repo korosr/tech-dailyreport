@@ -51,25 +51,11 @@
                     </tbody>
                 </table>
                 <div id="reactionBtn" class="m-2">
-                	<a href="<c:url value="/reports/reaction?id=${report.id}&reaction_id=1"/>"><i class="far fa-thumbs-up fa-2x"></i></a>
-	                <c:if test="${iine_count != 0}">
-	                	<span data-toggle="tooltip" title="${iine_users[0]}さん<c:if test="${fn:length(iine_users) != 1}">、他${fn:length(iine_users)-1}人</c:if>がリアクションしました！">${iine_count}</span>
+	                <c:if test="${!good}">
+	                	<a href="<c:url value="/reports/reaction?id=${report.id}&good=on"/>" ><i class="far fa-heart fa-2x" style="color: indianred;"></i></a>
 	                </c:if>
-	                <a href="<c:url value="/reports/reaction?id=${report.id}&reaction_id=2"/>" class="ml-2"><i class="far fa-smile fa-2x"></i></a>
-	                <c:if test="${smile_count != 0}">
-	                	<span data-toggle="tooltip" title="${smile_users[0]}さん<c:if test="${fn:length(smile_users) != 1}">、他${fn:length(smile_users)-1}人</c:if>がリアクションしました！">${smile_count}</span>
-	                </c:if>
-	                <a href="<c:url value="/reports/reaction?id=${report.id}&reaction_id=3"/>" class="ml-2"><i class="far fa-laugh-squint fa-2x"></i></a>
-	                <c:if test="${big_count != 0}">
-	                	<span data-toggle="tooltip" title="${big_users[0]}さん<c:if test="${fn:length(big_users) != 1}">、他${fn:length(big_users)-1}人</c:if>がリアクションしました！">${big_count}</span>
-	                </c:if>
-	                <a href="<c:url value="/reports/reaction?id=${report.id}&reaction_id=4"/>" class="ml-2"><i class="far fa-grin-beam-sweat fa-2x"></i></a>
-	                <c:if test="${sweat_count != 0}">
-	                	<span data-toggle="tooltip" title="${sweat_users[0]}さん<c:if test="${fn:length(sweat_users) != 1}">、他${fn:length(sweat_users)-1}人</c:if>がリアクションしました！">${sweat_count}</span>
-	                </c:if>
-	                <a href="<c:url value="/reports/reaction?id=${report.id}&reaction_id=5"/>" class="ml-2"><i class="far fa-frown fa-2x"></i></a>
-	                <c:if test="${bad_count != 0}">
-	                	<span data-toggle="tooltip" title="${bad_users[0]}さん<c:if test="${fn:length(bad_users) != 1}">、他${fn:length(bad_users)-1}人</c:if>がリアクションしました！">${bad_count}</span>
+	                <c:if test="${good}">
+	                	<a href="<c:url value="/reports/reaction?id=${report.id}&good=off"/>"><i class="fas fa-heart fa-2x" style="color: indianred;"></i></a>
 	                </c:if>
                 </div>
                 <c:if test="${sessionScope.login_employee.id == report.employee.id}">
