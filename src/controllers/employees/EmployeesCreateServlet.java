@@ -60,11 +60,9 @@ public class EmployeesCreateServlet extends HttpServlet {
             List<String> errors = EmployeeValidator.validate(e, true, true);
             if(errors.size() > 0) {
                 em.close();
-
                 request.setAttribute("_token", request.getSession().getId());
                 request.setAttribute("employee", e);
                 request.setAttribute("errors", errors);
-
                 RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/new.jsp");
                 rd.forward(request, response);
             } else {
@@ -73,10 +71,8 @@ public class EmployeesCreateServlet extends HttpServlet {
                 em.getTransaction().commit();
                 request.getSession().setAttribute("flush", "登録が完了しました。");
                 em.close();
-
                 response.sendRedirect(request.getContextPath() + "/employees/index");
             }
         }
 	}
-
 }
