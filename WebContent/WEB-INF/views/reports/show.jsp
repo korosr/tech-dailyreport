@@ -51,12 +51,15 @@
                     </tbody>
                 </table>
                 <div id="reactionBtn" class="m-2">
-	                <c:if test="${!good}">
-	                	<a href="<c:url value="/reports/reaction?id=${report.id}&good=on"/>" ><i class="far fa-heart fa-2x" style="color: indianred;"></i></a>
-	                </c:if>
-	                <c:if test="${good}">
-	                	<a href="<c:url value="/reports/reaction?id=${report.id}&good=off"/>"><i class="fas fa-heart fa-2x" style="color: indianred;"></i></a>
-	                </c:if>
+	                <form method="post" action="<c:url value='/reports/reaction' />">
+	                	<input type="hidden" name="report_id" value="${report.id}">
+	                	<c:if test="${!good}">
+							<button type="submit" value="on" name="good_btn" class="btn p-0 border-0 text-primary"><i class="far fa-heart fa-2x" style="color: indianred;"></i></button>
+						</c:if>
+						<c:if test="${good}">
+							<button type="submit" value="off" name="good_btn" class="btn p-0 border-0 text-primary"><i class="fas fa-heart fa-2x" style="color: indianred;"></i></button>
+	                	</c:if>
+	                </form>
                 </div>
                 <c:if test="${sessionScope.login_employee.id == report.employee.id}">
                     <p><a href="<c:url value="/reports/edit?id=${report.id}" />">この日報を編集する</a></p>

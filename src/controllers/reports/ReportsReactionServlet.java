@@ -31,15 +31,15 @@ public class ReportsReactionServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		EntityManager em = DBUtil.createEntityManager();
 
 		//レポートID取得
-		int reportId = Integer.parseInt(request.getParameter("id"));
+		int reportId = Integer.parseInt(request.getParameter("report_id"));
 
 		//リアクション取得
-		String good = request.getParameter("good");
+		String good = request.getParameter("good_btn");
 
 		//ログインユーザ取得
 		Employee e = (Employee) request.getSession().getAttribute("login_employee");

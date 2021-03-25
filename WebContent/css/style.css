@@ -160,3 +160,7 @@ pre {
 h3 {
     font-size: larger;
 }
+
+.icn_search {
+    font-family: FontAwesome;
+}
