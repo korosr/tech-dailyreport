@@ -8,11 +8,6 @@
                 <c:out value="${flush}"></c:out>
             </div>
         </c:if>
-        <!-- 出退勤ボタン-->
-        <div id="in_out_btn">
-        	<a href="<c:url value='/timecards/in?tc_id=${timecard_id}' />" class="btn btn-success m-3 <c:if test="${inTimeOn}">disabled</c:if>" >出勤</a>
-        	<a href="<c:url value='/timecards/out?tc_id=${timecard_id}' />" class="btn btn-primary m-3 <c:if test="${!inTimeOn or !inTimeOut}">disabled</c:if>">退勤</a>
-        </div>
 
         <h2>日報管理システムへようこそ</h2>
         <h3>【自分の日報　一覧】</h3>

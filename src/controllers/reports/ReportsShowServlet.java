@@ -49,10 +49,9 @@ public class ReportsShowServlet extends HttpServlet {
         //リアクション
         Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
         long reaction_count = (long)em.createNamedQuery("getReactionCount", Long.class)
-        		.setParameter("report_id", r.getId())
-        		.setParameter("employee_id", login_employee.getId())
+        		.setParameter("report", r)
+        		.setParameter("employee", login_employee)
                 .getSingleResult();
-        	System.out.println("リアクション" + reaction_count);
         if(reaction_count == 0) {
         	request.setAttribute("good", false);
         }else if(reaction_count == 1){

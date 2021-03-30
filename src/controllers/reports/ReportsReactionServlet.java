@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import models.Employee;
 import models.ReactionManage;
+import models.Report;
 import util.DBUtil;
 
 /**
@@ -35,33 +36,32 @@ public class ReportsReactionServlet extends HttpServlet {
 
 		EntityManager em = DBUtil.createEntityManager();
 
-		//レポートID取得
-		int reportId = Integer.parseInt(request.getParameter("report_id"));
+		//レポートIDからレポートオブジェクト取得
+		Report report = em.find(Report.class, Integer.parseInt(request.getParameter("report_id")));
 
 		//リアクション取得
 		String good = request.getParameter("good_btn");
 
 		//ログインユーザ取得
 		Employee e = (Employee) request.getSession().getAttribute("login_employee");
-		int loginUserId = e.getId();
 
 		if("on".equals(good)) {
 			ReactionManage r = new ReactionManage();
-			r.setEmployee_id(loginUserId);
-			r.setReport_id(reportId);
+			r.setEmployee(e);
+			r.setReport(report);
 			em.getTransaction().begin();
 			em.persist(r);
 			em.getTransaction().commit();
 		}else if("off".equals(good)){
 			em.getTransaction().begin();
 			em.createNamedQuery("deleteReaction")
-			.setParameter("report_id", reportId)
-			.setParameter("employee_id", loginUserId)
+			.setParameter("report", report)
+			.setParameter("employee", e)
 			.executeUpdate();
 			em.getTransaction().commit();
 		}
 
 		em.close();
-        response.sendRedirect(request.getContextPath() + "/reports/show?id=" + Integer.toString(reportId) );
+        response.sendRedirect(request.getContextPath() + "/reports/show?id=" + Integer.toString(report.getId()) );
 	}
 }
