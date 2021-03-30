@@ -38,10 +38,8 @@ public class ReportsReactionServlet extends HttpServlet {
 
 		//レポートIDからレポートオブジェクト取得
 		Report report = em.find(Report.class, Integer.parseInt(request.getParameter("report_id")));
-
 		//リアクション取得
 		String good = request.getParameter("good_btn");
-
 		//ログインユーザ取得
 		Employee e = (Employee) request.getSession().getAttribute("login_employee");
 
